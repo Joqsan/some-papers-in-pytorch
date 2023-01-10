@@ -40,10 +40,9 @@ class BasicBlock(nn.Module):
         self,
         in_channels: int,
         out_channels: int,
-        kernel_size: int = 1,
         stride: int = 1,
         skip: Optional[nn.Module] = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.cnn1 = conv3x3(in_channels, out_channels, stride)
@@ -56,7 +55,7 @@ class BasicBlock(nn.Module):
 
         self.relu = nn.ReLU()
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
 
         # 3x3, 64
         out = self.conv1(x)
@@ -88,7 +87,7 @@ class Bottleneck(nn.Module):
         kernel_size: int = 1,
         stride: int = 1,
         skip: Optional[nn.Module] = None,
-    ):
+    ) -> None:
         super().__init__()
 
         # 1x1, 64
@@ -107,7 +106,7 @@ class Bottleneck(nn.Module):
 
         self.relu = nn.ReLU()
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.conv1(x)
         out = self.bn1(out)
         out = self.relu(out)
@@ -170,7 +169,7 @@ class ResNet(nn.Module):
 
         self.initialize_weights(init_residual_weights)
 
-    def initialize_weights(self, init_residual_weights: bool):
+    def initialize_weights(self, init_residual_weights: bool) -> None:
 
         """We initialize the weights as in [13] --  Delving deep into rectifiers:
         Surpassing human-level performance on imagenet classification.
@@ -198,7 +197,7 @@ class ResNet(nn.Module):
                 elif isinstance(m, BasicBlock) and m.bn2.weight is not None:
                     nn.init.constant_(m.bn2.weight, 0)  # type: ignore[arg-type]
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.layer0(x)
         x = self.layer1(x)
         x = self.layer2(x)
@@ -215,8 +214,7 @@ class ResNet(nn.Module):
         curr_out_channels: int,
         num_blocks: int,
         stride: int = 1,
-        dilate: bool = False,
-    ):
+    ) -> nn.Sequential:
 
         skip = None
 
@@ -254,11 +252,11 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
 
-def ResNet34(num_classes: int, channels: int = 3):
+def ResNet34(num_classes: int, channels: int = 3) -> ResNet:
     # See Table 1
     return ResNet(BasicBlock, [3, 4, 6, 3], num_classes, channels)
 
 
-def ResNet50(num_classes: int, channels: int = 3):
+def ResNet50(num_classes: int, channels: int = 3) -> ResNet:
     # See Table 1
     return ResNet(Bottleneck, [3, 4, 6, 3], num_classes, channels)
