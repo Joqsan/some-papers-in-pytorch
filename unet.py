@@ -29,7 +29,7 @@ class EncoderBlock(nn.Module):
         self.block = BasicBlock(in_channels, out_channels)
         self.downsample = nn.MaxPool2d((2, 2))
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.block(x)
         x = self.downsample(x)
 
@@ -48,7 +48,7 @@ class Encoder(nn.Module):
 
             in_channels = out_channels
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         feat_maps = []
 
         for block in self.downblocks:
@@ -75,7 +75,7 @@ class DecoderBlock(nn.Module):
         self.upsample = nn.ConvTranspose2d(in_channels, out_channels, 2, 2)
         self.block = BasicBlock(in_channels, out_channels)
 
-    def forward(self, x: torch.Tensor, feat_map: torch.Tensor):
+    def forward(self, x: torch.Tensor, feat_map: torch.Tensor) -> torch.Tensor:
         x = self.upsample(x)
 
         x_prev_cropped = self.crop(feat_map, x)
@@ -85,7 +85,7 @@ class DecoderBlock(nn.Module):
 
         return x
 
-    def crop(self, feat_map: List[torch.Tensor], x: torch.Tensor):
+    def crop(self, feat_map: List[torch.Tensor], x: torch.Tensor) -> torch.Tensor:
         feat_map = torchvision.transforms.CenterCrop(x.shape[2:])(feat_map)
         return feat_map
 
@@ -102,7 +102,7 @@ class Decoder(nn.Module):
 
             in_channels = out_channels
 
-    def forward(self, x: torch.Tensor, feat_maps: List[torch.Tensor]):
+    def forward(self, x: torch.Tensor, feat_maps: List[torch.Tensor]) -> torch.Tensor:
 
         for block in self.upblocks:
             feat_map = feat_maps.pop()
@@ -132,7 +132,7 @@ class UNet(nn.Module):
 
         self.fc = nn.Conv2d(reversed_block_out_channels[-1], num_classes, 1)
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         feat_maps = self.encoder(x)
         out = self.midblock(feat_maps[-1])
         out = self.decoder(out, feat_maps)
