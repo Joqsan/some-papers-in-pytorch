@@ -6,3 +6,4 @@ Some NNs:
 
 Diffusion models:
 - `ddpm/`: [Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239).
+- `ddim/`: [Denoising Diffusion Implicit Models](https://arxiv.org/abs/2010.02502).

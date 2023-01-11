@@ -1,5 +1,5 @@
 
-- `ddpm.py`: [Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239)
+- `ddpm.py`: [Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239).
 
 Notes:
 - `sample()` computes a single sampling step of Algorithm 2.
