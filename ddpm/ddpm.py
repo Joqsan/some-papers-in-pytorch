@@ -5,7 +5,7 @@ import torch
 from torch import nn
 
 
-class DDPMSampler(nn.Module):
+class DDPMSampler:
     def __init__(
         self,
         beta_1: float = 0.001,
@@ -53,9 +53,9 @@ class DDPMSampler(nn.Module):
         )
 
         z = (
-            torch.randn(x_t.shape, device=self.device)
+            torch.randn_like(x_t)
             if t > 0
-            else torch.zeros_like(x_t, device=self.device)
+            else torch.zeros_like(x_t)
         )
         sigma_t = self._get_sigma(t)
 

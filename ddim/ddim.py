@@ -5,7 +5,7 @@ import torch
 from torch import nn
 
 
-class DDIMSampler(nn.Module):
+class DDIMSampler:
     def __init__(
         self,
         beta_1: float = 0.001,
@@ -83,7 +83,7 @@ class DDIMSampler(nn.Module):
             0.5
         ) * eps_theta_t
 
-        eps_t = torch.randn(x_t.shape, device=self.device)
+        eps_t = torch.randn_like(x_t)
 
         # Eq. (12)
         x_t_prev = (
